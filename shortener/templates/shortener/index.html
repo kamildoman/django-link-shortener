@@ -1,0 +1,18 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'shortener/style.css' %}">
+<body>
+    <img src="{% static 'shortener/logo.png' %}" alt="">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <p>{{ field.label }}</p>
+        {{ field }}
+        {% endfor %}
+        <br>
+        <input type="submit" value="Submit" class="submitbutton">
+        <hr>
+        {% if short_link %}
+            <h2>Shortened link: <a href="{{short_link}}">{{ request.build_absolute_uri }}{{short_link}}</a></h2>
+        {% endif %}
+    </form>
+</body>
