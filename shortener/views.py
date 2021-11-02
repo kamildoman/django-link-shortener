@@ -15,10 +15,12 @@ def index(request):
         short_link = URLShortener.objects.get(url=link).shortened_url
         if validators.url(short_link):
             if already_exists == False:
-                form.save()   
+                form.save() 
+            else:
+                pass  
         else:
             message_error = "Please enter a correct link"    
-            short_link = None              
+            short_link = ""            
         form = URLForm
         return render(request, "shortener/index.html", {"form": form, "short_link": short_link, "message_error": message_error})
     else:
