@@ -12,17 +12,13 @@ def index(request):
         form.save(commit=False)
         link = form.cleaned_data["url"]
         already_exists = URLShortener.objects.filter(url=link).exists()
-        short_link = URLShortener.objects.get(url=link).shortened_url
-        if validators.url(short_link):
-            if already_exists == False:
-                form.save() 
-            else:
-                pass  
+        if already_exists:
+            short_link = URLShortener.objects.get(url=link).shortened_url
         else:
-            message_error = "Please enter a correct link"    
-            short_link = ""            
+            form.save()         
+            short_link = URLShortener.objects.get(url=link).shortened_url
         form = URLForm
-        return render(request, "shortener/index.html", {"form": form, "short_link": short_link, "message_error": message_error})
+        return render(request, "shortener/index.html", {"form": form, "short_link": short_link})
     else:
         form = URLForm
         return render(request, "shortener/index.html", {"form": form})
