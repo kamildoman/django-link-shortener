@@ -3,6 +3,7 @@ from .models import URLShortener
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import URLForm
+import validators
 
 
 def index(request):
@@ -11,13 +12,15 @@ def index(request):
         form.save(commit=False)
         link = form.cleaned_data["url"]
         already_exists = URLShortener.objects.filter(url=link).exists()
-        if already_exists:
-            short_link = URLShortener.objects.get(url=link).shortened_url
+        short_link = URLShortener.objects.get(url=link).shortened_url
+        if validators.url(short_link):
+            if already_exists == False:
+                form.save()   
         else:
-            form.save()         
-            short_link = URLShortener.objects.get(url=link).shortened_url
+            message_error = "Please enter a correct link"    
+            short_link = None              
         form = URLForm
-        return render(request, "shortener/index.html", {"form": form, "short_link": short_link})
+        return render(request, "shortener/index.html", {"form": form, "short_link": short_link, "message_error": message_error})
     else:
         form = URLForm
         return render(request, "shortener/index.html", {"form": form})
