@@ -15,5 +15,9 @@
             <h2>Shortened link: <a href="{{short_link}}">{{ request.build_absolute_uri }}{{short_link}}</a></h2>
         {% endif %}
 
+        {% if error %}
+            {{error}}
+        {% endif %}
+
     </form>
 </body>
